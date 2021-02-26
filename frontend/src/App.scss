@@ -1,0 +1,338 @@
+$bg: #353535;
+$color: #FFFCF9;
+$good: #18b34b;
+$wrong: #990a0a;
+
+html {
+    background-color: #282c34;
+    min-height: 100vh;
+    margin: 0;
+    padding: 0;
+}
+
+.App {
+  text-align: center;
+  background-color: #282c34;
+}
+/*----------------- HEADER ------------------- */
+
+ul { 
+    margin-left: auto;
+    margin-right: auto;
+    padding: 0; 
+    list-style: none; 
+    /* display: table; */
+    width: 600px;
+    text-align: center;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+li { 
+    /* display: table-cell;  */
+    position: relative; 
+    padding: 15px 0;
+    &:hover {
+        color: red;
+    }
+}
+
+.nav-btn {
+    color: #fff;
+    font-size: 26px;
+    /* text-transform: uppercase; */
+    /* letter-spacing: 0.15em; */
+    text-decoration: none;
+    display: inline-block;
+    padding: 15px 20px;
+    position: relative;
+    margin: 0;
+    transition: all 300ms ease-in-out;
+    &:hover {
+        color: lighten($good, 10%);
+    }
+}
+
+
+.nav-btn:after {    
+    background: none repeat scroll 0 0 transparent;
+    bottom: 0;
+    content: "";
+    display: block;
+    height: 2px;
+    left: 50%;
+    position: absolute;
+    background: #fff;
+    transition: width 0.2s ease 0s, left 0.2s ease 0s;
+    width: 0;
+}
+
+.nav-btn:hover:after { 
+    width: 100%; 
+    left: 0; 
+}
+
+.nav-btn:hover {
+    cursor: pointer;
+}
+
+.link-btn {
+    color: rgb(228, 228, 228);
+    text-decoration: none;
+}
+
+/* ------------------ HOME ----------------- */
+
+.home {
+  background-color: #282c34;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+  margin-top: 5em;
+}
+
+.play-btn {
+  -webkit-transition: transform .15s ease-in-out;
+  -moz-transition: transform .15s ease-in-out;
+  transition: transform .15s ease-in-out;
+}
+
+.play-btn:hover {
+    cursor: pointer;
+    transform: scale(1.4)
+}
+
+/* --------------------- GAME ----------------------- */
+
+*{
+    box-sizing: border-box;
+  }
+  body{
+  //   background: $bg;
+    color: $color;
+    font-family: 'Raleway', sans-serif;
+  }
+  
+  a{
+    color: $good;
+    display: block;
+    margin: 0 auto;
+    text-decoration: none;
+    text-align: center;
+    transition: all 300ms ease-in-out;
+    font-size: 1rem;
+    
+    &:hover{
+      color: lighten($good, 10%);
+    }
+  }
+  
+  .serif{
+    font-family: 'Lora', serif;
+     
+    .game-letter{
+      text-transform: lowercase;
+      letter-spacing: 1px;
+      font-weight: 400;
+    }
+  }
+  
+  .game{
+  //   background: lighten($bg, 5%);
+    max-width: 800px;
+    margin: 0 auto;
+    margin-top: 6em;
+    width: 100%;
+    height: 100vh;
+    max-height: 800px;
+    
+    position: relative;
+    overflow: hidden;
+    
+    &__board{
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      width: 100%;
+      padding: 40px;
+    }
+    
+    &__score{
+      position: absolute;
+      top: 40px;
+      left: 40px;
+      font-size: 1rem;
+    }
+    
+    &__timer{
+      position: absolute;
+      top: 40px;
+      right: 40px;
+      font-size: 1rem;
+    }
+    
+    &__words{
+      position: absolute;
+      top: 80px;
+      left: 0;
+      width: 100%;
+      text-align: center;
+      
+      p{
+        font-size: 1rem;
+      }
+    }
+  }
+  
+  .home-title {
+      font-size: 42px;
+      font-weight: 600;
+  }
+  
+  .emoji{
+    font-family: Arial, Helvetica, sans;
+    margin-left: 10px;
+    font-size: 2rem;
+    vertical-align: middle;
+  }
+  
+  .game-letter{
+    letter-spacing: 2px;
+    font-size: 2rem;
+    font-weight: 700;
+    &[data-correct="true"]{
+      color: $good;
+    }
+    &[data-correct="false"]{
+      background: $wrong;
+    }
+    
+    @media screen and (min-width: 768px){
+      font-size: 4rem;
+    }
+  }
+  
+  p{
+    font-size: 1.4rem;
+    text-align: center;
+  }
+  
+  .button{
+    background: transparent;
+    cursor: pointer;
+    border: 2px solid $color;
+    border-radius: 4px;
+    color: $color;
+    text-transform: uppercase;
+    font-size: 2rem;
+    padding: 8px 20px;
+    display: block;
+    margin: 40px auto;
+    transition: all 200ms ease-in-out;
+    
+    &:hover{
+      border: 2px solid $good;
+    }
+    
+  }
+  
+  .secret-input{
+    position: absolute;
+    top: 40px;
+    left: 50%;
+    width: 0px;
+    height: 0px;
+    opacity: 0;
+  }
+  
+  .fade-enter {
+    opacity: .01;
+  }
+  
+  .fade-enter.fade-enter-active {
+    opacity: 1;
+    transition: all 500ms ease-in-out;
+  }
+  
+  .fade-leave {
+    opacity: 1;
+  }
+  
+  .fade-leave.fade-leave-active {
+    opacity: .01;
+    transform: translateY(100px);
+    transition: all 500ms ease-in-out;
+  }
+  
+  .scale-enter {
+    opacity: .01;
+  }
+  
+  .scale-enter.scale-enter-active {
+    opacity: 1;
+    transition: all 500ms ease-in-out;
+  }
+  
+  .scale-leave {
+    opacity: 1;
+  }
+  
+  .scale-leave.scale-leave-active {
+    opacity: .01;
+    transform: scale(3) rotate(20deg);
+    transition: all 500ms ease-in-out;
+  }
+
+
+/* -------------------SCOREBOARD --------------------- */
+
+.scoreboard {
+    display: flex;
+    justify-content: center;
+    background-color: #050914;
+    color: #fff;
+    /* max-width: 20em; */
+}
+
+/* ----------------------- ABOUT ------------------- */
+
+.about {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin: 0 auto;
+    margin-top: 5em;
+    text-align: justify;
+    color: #fff;
+    max-width: 30em;
+    font-size: 24px;
+}
+
+// ------------------- LOGIN ---------------------------
+
+.login-form {
+    display: flex;
+    flex-direction: column;
+    margin: 1em;
+}
+
+.label {
+    margin: 1em;
+}
+
+.log-input {
+    margin: 1em;
+}
+
+.signup-txt, .logout-btn{
+    cursor: pointer;
+    transition: all 200ms ease-in-out;
+    &:hover {
+        color: lighten($good, 10%);
+    }
+}
