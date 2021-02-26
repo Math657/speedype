@@ -38,8 +38,6 @@ class CreatePlayer extends AbstractController
             $entityManager->flush();
 
             return new Response('Saved new player with id '.$player->getId());
-        }
-
-        
+        }   
     }
 }
