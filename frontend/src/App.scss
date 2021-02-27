@@ -14,7 +14,12 @@ html {
   text-align: center;
   background-color: #282c34;
 }
+
 /*----------------- HEADER ------------------- */
+
+.header {
+    margin-bottom: 8em;
+}
 
 ul { 
     margin-left: auto;
@@ -145,7 +150,6 @@ li {
   //   background: lighten($bg, 5%);
     max-width: 800px;
     margin: 0 auto;
-    margin-top: 6em;
     width: 100%;
     height: 100vh;
     max-height: 800px;
@@ -332,6 +336,18 @@ li {
 .signup-txt, .logout-btn{
     cursor: pointer;
     transition: all 200ms ease-in-out;
+    &:hover {
+        color: lighten($good, 10%);
+    }
+}
+
+.error-msg {
+    color: $wrong;
+    font-size: 16px;
+}
+
+.link {
+    color: $good;
     &:hover {
         color: lighten($good, 10%);
     }

@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Players;
+use App\Repository\PlayersRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -17,12 +18,30 @@ class LoginController extends AbstractController
      */
     public function login(ValidatorInterface $validator, Request $request): Response
     {
-        $data = json_decode($request->getContent(), true);
-        $user = $data['user'];
+        $entityManager = $this->getDoctrine()->getManager();
 
-        dd($data['user']['name']);
+        $data = json_decode($request->getContent(), true);
+        $username = $data['user']['name'];
+        $exist = $entityManager->getRepository(Players::class)->findOneBy(['player_name' => $username]);
+
+        if ($exist) {
+            $pw = $data['user']['password'];
+
+            $match = password_verify($pw, $exist->getPassword());
+
+            if ($match) {
+                return $this->json(['message' => 'Logged!'], 200);
+            } else {
+                return $this->json(['message' => 'Wrong username and/or password'], 400);
+            }
+
+        dd($pw);
         // dd($user['name']);
         
         // return $this->json($data, 201);
+        } else {
+            return $this->json(['message' => 'Wrong username and/or password'], 400);
+        }
+        
     }
 }

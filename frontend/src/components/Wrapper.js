@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import {BrowserRouter as Router, Route } from 'react-router-dom'
 import Header from './Header'
 import Game from './Game'
-import Scoreboard from './Scoreboard'
+import Leaderboard from './Leaderboard'
 import Stats from './Stats'
 import About from './About'
 import Login from './Login'
@@ -11,19 +11,18 @@ export class Wrapper extends Component {
     constructor(props){
         super(props)
         this.state = {
-          logged: false
+          logged: false,
+          playerName: ''
         }
         this.logHandler = this.logHandler.bind(this)
     }
 
-    logHandler() {
+    logHandler(name) {
         this.setState(prevState => ({
-            logged: !prevState.logged
+            logged: !prevState.logged,
+            playerName: name
         }))
-    }
-
-    test() {
-        console.log('yes')
+        console.log(this.state.playerName)
     }
 
     render() {
@@ -34,10 +33,10 @@ export class Wrapper extends Component {
                     <Route
                         exact path='/'
                         render={(props) => (
-                            <Game {...props} logged={this.state.logged} />
+                            <Game {...props} logged={this.state.logged} playerName={this.state.playerName} />
                         )}
                     />
-                    <Route path='/scoreboard' component={Scoreboard} />
+                    <Route path='/Leaderboard' component={Leaderboard} />
 
                     <Route
                         path='/stats'

@@ -16,7 +16,7 @@ export class Header extends Component {
             <div className="header">
                 <ul>
                     <li><Link to="/" className="link-btn"><h3 className="nav-btn">Game</h3></Link></li>
-                    <li><Link to="/scoreboard" className="link-btn"><h3 className="nav-btn">Scoreboard</h3></Link></li>
+                    <li><Link to="/leaderboard" className="link-btn"><h3 className="nav-btn">Leaderboard</h3></Link></li>
                     <li><Link to="/stats" className="link-btn"><h3 className="nav-btn">Stats</h3></Link></li>
                     <li><Link to="/about" className="link-btn"><h3 className="nav-btn">About</h3></Link></li>
                     <li><Link to="/login" className="link-btn"><h3 className="nav-btn">{this.getStatus()}</h3></Link></li>

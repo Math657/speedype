@@ -12,7 +12,7 @@ use Symfony\Component\Serializer\SerializerInterface;
 class GetOnePlayerController extends AbstractController
 {
     /**
-     * @Route("/get/player/{player_name}", name="get_one_player", methods={"GET"})
+     * @Route("/player/{player_name}", name="get_one_player", methods={"GET"})
      */
     public function getOnePlayer(string $player_name, PlayersRepository $playerRepository): Response
     {

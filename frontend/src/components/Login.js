@@ -1,5 +1,5 @@
-import axios from 'axios'
 import React, { Component } from 'react'
+import axios from 'axios'
 
 export class Login extends Component {
     constructor(props){
@@ -8,7 +8,10 @@ export class Login extends Component {
           name: '',
           password: '',
           passwordRepeat: '',
-          showSignup: false
+          showSignup: false,
+          errorName: '',
+          errorPassword: '',
+          errorPasswordRepeat: ''
         }
         this.handleChangeName = this.handleChangeName.bind(this)
         this.handleChangePassword = this.handleChangePassword.bind(this)
@@ -29,13 +32,19 @@ export class Login extends Component {
 
     showSignup() {
         this.setState({
-            showSignup: true
+            showSignup: true,
+            errorName: '',
+            errorPassword: '',
+            errorPasswordRepeat: ''
         })
     }
 
     showLogin() {
         this.setState({
-            showSignup: false
+            showSignup: false,
+            errorName: '',
+            errorPassword: '',
+            errorPasswordRepeat: ''
         })
     }
 
@@ -53,13 +62,25 @@ export class Login extends Component {
             axios.post('http://localhost:3000/login', { user })
             .then(res => {
                 console.log(res)
-                this.props.logHandler()
+                this.props.logHandler(user.name)
+                this.setState({
+                    errorName: '',
+                    errorPassword: '',
+                    errorPasswordRepeat: ''
+                })
             })
             .catch(err => {
+                if (err.response.data.message === 'Wrong username and/or password') {
+                    this.setState({
+                        errorPassword: 'Wrong username and/or password'
+                    })
+                }
                 console.log(err)
             })
         } else {
-            console.log('Ne peut pas être vide!')
+            this.setState({
+                errorPassword: 'Empty fields!'
+            })
         }
     }
 
@@ -74,25 +95,46 @@ export class Login extends Component {
 
         if (user.name !== '' && user.password !== '' && user.passwordRepeat !== '') {
             if (user.password === user.passwordRepeat) {
-                if (user.password.length < 8) {
+                if (user.password.length > 7) {
                     axios.post('http://localhost:3000/signup', { user })
                     .then(res => {
-                        console.log(res.data)
+                        console.log(res)
                         this.props.logHandler()
+                        this.setState({
+                            errorName: '',
+                            errorPassword: '',
+                            errorPasswordRepeat: ''
+                        })
                     })
                     .catch(err => {
+                        if (err.response.data.message === 'This name already exist') {
+                            this.setState({
+                                errorName: 'This name already exists, please use another one',
+                                errorPasswordRepeat: ''
+                            })
+                        }
                         console.log(err)
                     })
                 } else {
-                    console.log('Password too short!')
+                    this.setState({
+                        errorPassword: 'Password must contain at least 8 characters',
+                        errorPasswordRepeat: '',
+                        errorName: ''
+                    })
                 }
                 
             } else {
-                console.log('Not the same passwords!')
+                this.setState({
+                    errorPasswordRepeat: 'Passwords do not match',
+                    errorPassword: '',
+                    errorName: ''
+                })
             }
             
         } else {
-            console.log('Ne peut pas être vide!')
+            this.setState({
+                errorPasswordRepeat: 'Empty fields!'
+            })
         }      
     }
 
@@ -117,15 +159,17 @@ export class Login extends Component {
                         <label className="label">
                             Name:
                             <input className="log-input" type="text" name="name" value={this.state.name} onChange={this.handleChangeName}/>
+                            <p className="error-msg">{this.state.errorName}</p>
                         </label>
 
                         <label>
                             Password:
                             <input className="log-input" type="password" name="password" value={this.state.password} onChange={this.handleChangePassword}/>
+                            <p className="error-msg">{this.state.errorPassword}</p>
                         </label>
                         <button type="submit" className="button">Log in</button>
                     </form>
-                    <p className="signup-txt" onClick={() => this.showSignup()}>No account ? Create one!</p>
+                    <p className="signup-txt link" onClick={() => this.showSignup()}>No account ? Create one!</p>
                 </div>
                 }
 
@@ -135,19 +179,22 @@ export class Login extends Component {
                             <label className="label">
                                 Name:
                                 <input className="log-input" type="text" name="name" value={this.state.name} onChange={this.handleChangeName}/>
+                                <p className="error-msg">{this.state.errorName}</p>
                             </label>
 
                             <label>
                                 Password:
                                 <input className="log-input" type="password" name="password" value={this.state.password} onChange={this.handleChangePassword}/>
+                                <p className="error-msg">{this.state.errorPassword}</p>
                             </label>
 
                             <label>
                                 Repeat Password:
                                 <input className="log-input" type="password" name="password" value={this.state.passwordRepeat} onChange={this.handleChangePasswordRepeat}/>
+                                <p className="error-msg">{this.state.errorPasswordRepeat}</p>
                             </label>
                             <button onClick={(e) => this.signup(e)} type="submit" className="button">Signup</button>
-                            <p className="signup-txt" onClick={() => this.showLogin()}>I already have an account</p>
+                            <p className="signup-txt link" onClick={() => this.showLogin()}>I already have an account</p>
                         </form>
                     </div>
                 }

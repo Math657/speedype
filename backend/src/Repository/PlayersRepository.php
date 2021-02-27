@@ -22,9 +22,9 @@ class PlayersRepository extends ServiceEntityRepository
     // /**
     //  * @return Players[] Returns an array of Players objects
     //  */
-    public function findAllScore()
+    public function findAllHighscore()
     {
-        return $this->findBy(array(), array('score' => 'DESC'));
+        return $this->findBy(array(), array('highscore' => 'DESC'));
     }
     /*
     public function findByExampleField($value)

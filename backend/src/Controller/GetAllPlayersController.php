@@ -16,6 +16,6 @@ class GetAllPlayersController extends AbstractController
      */
     public function getAllPlayers(PlayersRepository $playerRepository): Response
     {
-        return $this->json($playerRepository->findAllScore(), 201);
+        return $this->json($playerRepository->findAllHighscore(), 201);
     }
 }

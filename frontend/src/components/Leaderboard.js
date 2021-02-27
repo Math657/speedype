@@ -35,7 +35,7 @@ export class Scoreboard extends Component {
                     {players.map((data) => {
                     return <tr>
                                 <td>{data.playerName}</td>
-                                <td>{data.score}</td>
+                                <td>{data.highscore}</td>
                                 <td><Moment fromNow>{data.createdAt}</Moment></td>
                             </tr>
                     })}

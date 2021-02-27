@@ -29,7 +29,7 @@ class Players
     /**
      * @ORM\Column(type="integer")
      */
-    private $score;
+    private $highscore;
 
     /**
      * @ORM\Column(type="datetime")
@@ -40,6 +40,11 @@ class Players
      * @ORM\Column(type="integer")
      */
     private $game_played;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $password;
 
     public function getId(): ?int
     {
@@ -58,14 +63,14 @@ class Players
         return $this;
     }
 
-    public function getScore(): ?int
+    public function getHighscore(): ?int
     {
-        return $this->score;
+        return $this->highscore;
     }
 
-    public function setScore(int $score): self
+    public function setHighscore(int $highscore): self
     {
-        $this->score = $score;
+        $this->highscore = $highscore;
 
         return $this;
     }
@@ -90,6 +95,18 @@ class Players
     public function setGamePlayed(int $game_played): self
     {
         $this->game_played = $game_played;
+
+        return $this;
+    }
+
+    public function getPassword(): ?string
+    {
+        return $this->password;
+    }
+
+    public function setPassword(string $password): self
+    {
+        $this->password = $password;
 
         return $this;
     }

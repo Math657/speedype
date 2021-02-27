@@ -1,5 +1,7 @@
 import React, { Component } from 'react'
 import axios from 'axios'
+import { Link } from 'react-router-dom'
+
 
 // import ReactCSSTransitionGroup from 'react-transition-group'
 
@@ -80,12 +82,28 @@ export class Game extends Component {
           timer: newTime
         })
         if(newTime === 0){
-          window.clearInterval(this.interval)
+            window.clearInterval(this.interval)
+
+            if (this.props.logged) {
+                const gameStats = {
+                    name: this.props.playerName,
+                    score: this.state.score,
+                    date: Date.now()
+                } 
+
+                axios.post('http://localhost:3000/gameplayed', { gameStats })
+                .then(res => {
+                    console.log(res)
+                })
+                .catch(err => {
+                    console.log(err)
+                })
+            }
         }
     }
       
     rating() {
-        if(this.state.score < 15) {
+        if (this.state.score < 15) {
           return '😫'
         }
         else if (this.state.score < 25) {
@@ -188,6 +206,9 @@ export class Game extends Component {
               <div className="game__words">
                 <p>{'GAME OVER'}</p>
                 <p>{'FINAL SCORE: ' + this.state.score}<span className="emoji">{this.rating()}</span></p>
+                {!this.props.logged &&
+                    <Link to="/login"><p>Log in to appear on the leaderboard and track your stats!</p></Link>
+                }
                 <button className="button" onClick={this.startGame}>{'Retry'}</button>
               </div>
             </div>
