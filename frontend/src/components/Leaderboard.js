@@ -11,9 +11,15 @@ export class Scoreboard extends Component {
     }
 
     componentDidMount() {
-        axios.get('http://localhost:3000/all/players')
-        .then(res => {
-            this.setState({ players: res.data })
+        axios.get(`${process.env.REACT_APP_API_URL}/all/players`)
+        .then(res => {        
+            const top50 = []
+            for (let i = 0; i < 50; i++) {
+                if (res.data[i] && res.data[i].highscore > 0) {
+                    top50.push(res.data[i])
+                }
+            }
+            this.setState({ players: top50 })
         })
         .catch(err => {
             console.log(err)
@@ -24,23 +30,29 @@ export class Scoreboard extends Component {
         const players = this.state.players
 
         return (
-            <div className="scoreboard">
-                <table>
-                    <tr>
-                        <th>Player</th>
-                        <th>Score</th>
-                        <th>Date</th>
-                    </tr>
+            <div>
+                <h3>TOP 50</h3>
+                <div className="scoreboard">
+                    <table>
+                        <tr>
+                            <th className="table-name">Rank</th>
+                            <th className="table-name">Player</th>
+                            <th className="table-name">Score</th>
+                            <th className="table-name">Date</th>
+                        </tr>
 
-                    {players.map((data) => {
-                    return <tr>
-                                <td>{data.playerName}</td>
-                                <td>{data.highscore}</td>
-                                <td><Moment fromNow>{data.createdAt}</Moment></td>
-                            </tr>
-                    })}
-                </table>
+                        {players.map((data, index) => {
+                        return <tr>
+                                    <td>{index + 1}</td>
+                                    <td>{data.playerName}</td>
+                                    <td>{data.highscore}</td>
+                                    <td><Moment fromNow subtract={{ hours: 1 }}>{data.createdAt}</Moment></td>
+                                </tr>
+                        })}
+                    </table>
+                </div>
             </div>
+            
           )
       }
 }

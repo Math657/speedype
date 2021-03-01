@@ -5,7 +5,7 @@ export class Header extends Component {
 
     getStatus() {
         if (this.props.logged) {
-            return 'Logout'
+            return this.props.playerName
         } else {
             return 'Login'
         }

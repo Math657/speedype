@@ -9,14 +9,15 @@ import { Link } from 'react-router-dom'
 
 export class Game extends Component {
     constructor(props){
-        super(props)
+        super(props);
         this.state = {
           gameStarted: false,
           activeWord: [],
           activeLetters: [],
           score: 0,
           timer: 0,
-          wordList: []
+          wordList: [],
+          postGameMsg: ''
         }
         this.inputRef = React.createRef()
         this.getWordList = this.getWordList.bind(this)
@@ -25,43 +26,50 @@ export class Game extends Component {
         this.checkEqual = this.checkEqual.bind(this)
         this.timer = this.timer.bind(this)
         this.startGame = this.startGame.bind(this)
-        this.rating = this.rating.bind(this)
-      }
+        // this.rating = this.rating.bind(this)
+    }
 
-      componentWillMount() {
-      
-        document.addEventListener('keydown', function(e) {
-          e.preventDefault()
-          
-          // handle backspace and delete
-          if(e.which === 46 || e.which === 8){
+    
+    
+
+    componentDidMount() {
+        document.addEventListener('keydown', this.logKey.bind(this))
+    }
+
+    componentWillUnmount() {
+        document.removeEventListener('keydown', this.logKey.bind(this))
+    }
+
+    logKey(e) {
+        e.stopPropagation()
+        // e.preventDefault()
+
+        if(e.which === 46 || e.which === 8){
             this.setState({
-              activeLetters: this.state.activeLetters.slice(0,-1)
+            activeLetters: this.state.activeLetters.slice(0,-1)
             })
             return true
-          }
-          
-          // otherwise add character to array
-          let char = String.fromCharCode(e.which)
-          let newActiveLetters = this.state.activeLetters
-          newActiveLetters.push(char)
-          if(this.checkEqual(newActiveLetters, this.state.activeWord) ){
+        }
+      
+      // otherwise add character to array
+        let char = String.fromCharCode(e.which)
+        let newActiveLetters = this.state.activeLetters
+        newActiveLetters.push(char)
+        if (this.checkEqual(newActiveLetters, this.state.activeWord) ){
             this.setState({
-              activeWord: this.getWord(),
-              activeLetters: [],
-              score: this.state.score + 5
+                activeWord: this.getWord(),
+                activeLetters: [],
+                score: this.state.score + 5
             })
-          }
-          else{
+        }
+        else {
             this.setState({
-              activeLetters: newActiveLetters
+                activeLetters: newActiveLetters
             })
-          }
-    
-        }.bind(this))
-      }
+        }
+    }
 
-      checkEqual(arr1, arr2) {
+    checkEqual(arr1, arr2) {
         if(arr1.length !== arr2.length)
             return false
         for(var i = arr1.length; i--;) {
@@ -87,13 +95,18 @@ export class Game extends Component {
             if (this.props.logged) {
                 const gameStats = {
                     name: this.props.playerName,
-                    score: this.state.score,
-                    date: Date.now()
+                    score: this.state.score
                 } 
 
-                axios.post('http://localhost:3000/gameplayed', { gameStats })
+                axios.post(`${process.env.REACT_APP_API_URL}/gameplayed`, { gameStats })
                 .then(res => {
-                    console.log(res)
+                    if (res.data.message === 'New highscore!') {
+                        this.setState({
+                            postGameMsg: 'New highscore!'
+                        })
+                    } else {
+                        console.log(res)
+                    }
                 })
                 .catch(err => {
                     console.log(err)
@@ -102,26 +115,26 @@ export class Game extends Component {
         }
     }
       
-    rating() {
-        if (this.state.score < 15) {
-          return '😫'
-        }
-        else if (this.state.score < 25) {
-          return '😐'
-        }
-        else if (this.state.score < 35) {
-          return '😊'
-        }
-        else if (this.state.score < 45) {
-          return '😃'
-        }
-        else {
-          return '😎'
-        }
-    }
+    // rating() {
+    //     if (this.state.score < 15) {
+    //       return '😫'
+    //     }
+    //     else if (this.state.score < 25) {
+    //       return '😐'
+    //     }
+    //     else if (this.state.score < 35) {
+    //       return '😊'
+    //     }
+    //     else if (this.state.score < 45) {
+    //       return '😃'
+    //     }
+    //     else {
+    //       return '😎'
+    //     }
+    // }
       
     startGame() {
-        axios.get('http://localhost:3000/generate/words')
+        axios.get(`${process.env.REACT_APP_API_URL}/generate/words`)
         .then(res => {
             this.setState({ wordList: res.data })
             this.setState({
@@ -188,6 +201,9 @@ export class Game extends Component {
               <p className="home-title">{'Welcome to Speedype.'}</p>
               <p className="home-infos">{'Type as many words as you can'}</p>
               <button className="button" onClick={this.startGame}>Play</button>
+              {this.props.logged === true &&
+                <Link to="/stats"><p className="logged-as">Logged as {this.props.playerName}</p></Link>
+              }
              </div>)
         }
         else if(this.state.timer && this.state.gameStarted){
@@ -205,11 +221,17 @@ export class Game extends Component {
             <div className="game__board" key="timesup">
               <div className="game__words">
                 <p>{'GAME OVER'}</p>
-                <p>{'FINAL SCORE: ' + this.state.score}<span className="emoji">{this.rating()}</span></p>
+                <p>{'FINAL SCORE: ' + this.state.score}
+                    {/* <span className="emoji">{this.rating()}</span> */}
+                </p>
+                <p className="new-highscore">{this.state.postGameMsg}</p>
                 {!this.props.logged &&
                     <Link to="/login"><p>Log in to appear on the leaderboard and track your stats!</p></Link>
-                }
+                }  
                 <button className="button" onClick={this.startGame}>{'Retry'}</button>
+                {this.props.logged === true &&
+                    <Link to="/stats"><p className="logged-as">Logged as {this.props.playerName}</p></Link>
+                }
               </div>
             </div>
           )
@@ -224,6 +246,7 @@ export class Game extends Component {
             <input ref={this.inputRef} className="secret-input" type="text"/>
           </div>
         )
+        
       }
     }
 

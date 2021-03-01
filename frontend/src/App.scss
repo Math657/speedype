@@ -2,6 +2,7 @@ $bg: #353535;
 $color: #FFFCF9;
 $good: #18b34b;
 $wrong: #990a0a;
+$bg2: #050914;
 
 html {
     background-color: #282c34;
@@ -18,7 +19,7 @@ html {
 /*----------------- HEADER ------------------- */
 
 .header {
-    margin-bottom: 8em;
+    margin-bottom: 6em;
 }
 
 ul { 
@@ -27,7 +28,7 @@ ul {
     padding: 0; 
     list-style: none; 
     /* display: table; */
-    width: 600px;
+    width: 800px;
     text-align: center;
     display: flex;
     flex-direction: row;
@@ -151,7 +152,8 @@ li {
     max-width: 800px;
     margin: 0 auto;
     width: 100%;
-    height: 100vh;
+    // height: 100vh;
+    height: 70vh;
     max-height: 800px;
     
     position: relative;
@@ -163,32 +165,32 @@ li {
       left: 0;
       height: 100%;
       width: 100%;
-      padding: 40px;
+      padding: 10px;
     }
     
     &__score{
       position: absolute;
       top: 40px;
       left: 40px;
-      font-size: 1rem;
+      font-size: 1.2rem;
     }
     
     &__timer{
       position: absolute;
       top: 40px;
       right: 40px;
-      font-size: 1rem;
+      font-size: 1.2rem;
     }
     
     &__words{
       position: absolute;
-      top: 80px;
+      top: 150px;
       left: 0;
       width: 100%;
       text-align: center;
       
       p{
-        font-size: 1rem;
+        font-size: 1.3rem;
       }
     }
   }
@@ -226,7 +228,7 @@ li {
     text-align: center;
   }
   
-  .button{
+  .button {
     background: transparent;
     cursor: pointer;
     border: 2px solid $color;
@@ -253,6 +255,16 @@ li {
     height: 0px;
     opacity: 0;
   }
+
+  .new-highscore {
+      font-size: 24px !important;
+      color: red;
+  }
+
+  .logged-as {
+    color: lighten($good, 10%);
+  }
+
   
   .fade-enter {
     opacity: .01;
@@ -298,17 +310,56 @@ li {
 .scoreboard {
     display: flex;
     justify-content: center;
-    background-color: #050914;
+    background-color: $bg2;
     color: #fff;
-    /* max-width: 20em; */
+    padding-bottom: 2em;
+    // max-width: 500px;
+    // max-width: 20em;
+}
+
+th {
+    padding: 2em;
+}
+
+.table-name {
+    color: lighten($good, 10%);
+    font-size: 20px;
+}
+
+td {
+    padding-bottom: 5px;
+}
+
+// ---------------------- STATS ----------------------
+
+.stats {
+    background-color: $bg2;
+    padding: 1em;
+    max-width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+    border-radius: 5px;
+}
+
+.stats-logged {
+    justify-content: left;
+    text-align: justify;
+}
+
+.player-stats {
+    font-size: 34px;
+    color: lighten($good, 10%);
 }
 
 /* ----------------------- ABOUT ------------------- */
 
 .about {
+    background-color: $bg2;
+    border-radius: 5px;
     display: flex;
     flex-direction: column;
     justify-content: center;
+    padding: 1em;
     margin: 0 auto;
     margin-top: 5em;
     text-align: justify;
@@ -326,11 +377,20 @@ li {
 }
 
 .label {
-    margin: 1em;
+    display: flex;
+    flex-direction: column;
 }
 
 .log-input {
     margin: 1em;
+    width: 200px;
+    padding: 5px 0;
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid #fff;
+    outline: none;
+    align-self: center;
+    color: #fff;
 }
 
 .signup-txt, .logout-btn{
@@ -351,4 +411,8 @@ li {
     &:hover {
         color: lighten($good, 10%);
     }
+}
+
+.btn-log {
+    margin: 15px auto;
 }

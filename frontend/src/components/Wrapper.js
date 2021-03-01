@@ -22,26 +22,30 @@ export class Wrapper extends Component {
             logged: !prevState.logged,
             playerName: name
         }))
-        console.log(this.state.playerName)
     }
 
     render() {
         return (
             <Router>
                 <div className='App'>
-                    <Header logged={this.state.logged} />
+                    <Header logged={this.state.logged} playerName={this.state.playerName} />
                     <Route
                         exact path='/'
                         render={(props) => (
                             <Game {...props} logged={this.state.logged} playerName={this.state.playerName} />
                         )}
                     />
-                    <Route path='/Leaderboard' component={Leaderboard} />
+                    <Route 
+                        path='/leaderboard'
+                        render={(props) => (
+                            <Leaderboard {...props} logged={this.state.logged} playerName={this.state.playerName}/>
+                        )} 
+                    />
 
                     <Route
                         path='/stats'
                         render={(props) => (
-                            <Stats {...props} logged={this.state.logged} />
+                            <Stats {...props} logged={this.state.logged} playerName={this.state.playerName}/>
                         )}
                     />
 

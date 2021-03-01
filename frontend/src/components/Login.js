@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import axios from 'axios'
-
 export class Login extends Component {
     constructor(props){
         super(props)
@@ -13,13 +12,14 @@ export class Login extends Component {
           errorPassword: '',
           errorPasswordRepeat: ''
         }
+        
         this.handleChangeName = this.handleChangeName.bind(this)
         this.handleChangePassword = this.handleChangePassword.bind(this)
         this.handleChangePasswordRepeat = this.handleChangePasswordRepeat.bind(this)
     }
 
-    handleChangeName(e) {
-        this.setState({ name: e.target.value })
+    handleChangeName(event) {
+        this.setState({ name: event.target.value })
     }
 
     handleChangePassword(e) {
@@ -51,7 +51,6 @@ export class Login extends Component {
     login(e) {
         // check à faire
         e.preventDefault()
-        // this.props.handler()
         
         const user = {
             name: this.state.name,
@@ -59,7 +58,7 @@ export class Login extends Component {
         }
         
         if (user.name !== '' && user.password !== '') {
-            axios.post('http://localhost:3000/login', { user })
+            axios.post(`${process.env.REACT_APP_API_URL}/login`, { user })
             .then(res => {
                 console.log(res)
                 this.props.logHandler(user.name)
@@ -68,6 +67,7 @@ export class Login extends Component {
                     errorPassword: '',
                     errorPasswordRepeat: ''
                 })
+                this.props.history.push('/')
             })
             .catch(err => {
                 if (err.response.data.message === 'Wrong username and/or password') {
@@ -96,18 +96,19 @@ export class Login extends Component {
         if (user.name !== '' && user.password !== '' && user.passwordRepeat !== '') {
             if (user.password === user.passwordRepeat) {
                 if (user.password.length > 7) {
-                    axios.post('http://localhost:3000/signup', { user })
+                    axios.post(`${process.env.REACT_APP_API_URL}/signup`, { user })
                     .then(res => {
                         console.log(res)
-                        this.props.logHandler()
+                        this.props.logHandler(user.name)
                         this.setState({
                             errorName: '',
                             errorPassword: '',
                             errorPasswordRepeat: ''
                         })
+                        this.props.history.push('/')
                     })
                     .catch(err => {
-                        if (err.response.data.message === 'This name already exist') {
+                        if (err.response.data.message  === 'This name already exist') {
                             this.setState({
                                 errorName: 'This name already exists, please use another one',
                                 errorPasswordRepeat: ''
@@ -147,8 +148,8 @@ export class Login extends Component {
             <div>
                 {this.props.logged && !this.state.showSignup &&
                     
-                    <div>
-                        <p onClick={() => this.logOut()} className="logout-btn">Log out ?</p>
+                    <div className="stats">
+                        <p onClick={() => this.logOut()} className="logout-btn link">Log out ?</p>
                     </div>
                 }
 
@@ -157,17 +158,17 @@ export class Login extends Component {
                 <div className="not-logged-page">
                     <form onSubmit={(e) => this.login(e)} className="login-form">
                         <label className="label">
-                            Name:
-                            <input className="log-input" type="text" name="name" value={this.state.name} onChange={this.handleChangeName}/>
+                            Name
+                            <input value={this.state.name} onChange={this.handleChangeName} className="log-input" type="text" name="name" maxlength="14" />
                             <p className="error-msg">{this.state.errorName}</p>
                         </label>
 
-                        <label>
-                            Password:
-                            <input className="log-input" type="password" name="password" value={this.state.password} onChange={this.handleChangePassword}/>
+                        <label className="label">
+                            Password
+                            <input value={this.state.password} onChange={this.handleChangePassword} className="log-input" type="password" name="password" maxlength="20"/>
                             <p className="error-msg">{this.state.errorPassword}</p>
                         </label>
-                        <button type="submit" className="button">Log in</button>
+                        <button type="submit" className="button btn-log">Log in</button>
                     </form>
                     <p className="signup-txt link" onClick={() => this.showSignup()}>No account ? Create one!</p>
                 </div>
@@ -177,23 +178,23 @@ export class Login extends Component {
                     <div className="signup-form">
                         <form onSubmit={(e) => this.signup(e)} className="login-form">
                             <label className="label">
-                                Name:
-                                <input className="log-input" type="text" name="name" value={this.state.name} onChange={this.handleChangeName}/>
+                                Name
+                                <input className="log-input" type="text" name="name" value={this.state.name} onChange={this.handleChangeName} maxlength="14"/>
                                 <p className="error-msg">{this.state.errorName}</p>
                             </label>
 
-                            <label>
-                                Password:
-                                <input className="log-input" type="password" name="password" value={this.state.password} onChange={this.handleChangePassword}/>
+                            <label className="label">
+                                Password
+                                <input className="log-input" type="password" name="password" value={this.state.password} onChange={this.handleChangePassword} maxlength="20"/>
                                 <p className="error-msg">{this.state.errorPassword}</p>
                             </label>
 
-                            <label>
-                                Repeat Password:
-                                <input className="log-input" type="password" name="password" value={this.state.passwordRepeat} onChange={this.handleChangePasswordRepeat}/>
+                            <label className="label">
+                                Repeat Password
+                                <input className="log-input" type="password" name="password" value={this.state.passwordRepeat} onChange={this.handleChangePasswordRepeat} maxlength="20"/>
                                 <p className="error-msg">{this.state.errorPasswordRepeat}</p>
                             </label>
-                            <button onClick={(e) => this.signup(e)} type="submit" className="button">Signup</button>
+                            <button onClick={(e) => this.signup(e)} type="submit" className="button btn-log">Signup</button>
                             <p className="signup-txt link" onClick={() => this.showLogin()}>I already have an account</p>
                         </form>
                     </div>
