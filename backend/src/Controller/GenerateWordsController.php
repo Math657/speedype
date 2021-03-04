@@ -1260,7 +1260,7 @@ class GenerateWordsController extends AbstractController
 
         // $englishList = preg_split("/[\s,]+/", $englishList);
       
-        $n = 100;
+        $n = 200;
         // $rand = array_rand(array_flip($englishList), $n);
         // $rand = array_map('strtoupper', $rand);
 

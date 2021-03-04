@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import axios from 'axios'
+import Stats from './Stats'
 export class Login extends Component {
     constructor(props){
         super(props)
@@ -147,8 +148,9 @@ export class Login extends Component {
         return (
             <div>
                 {this.props.logged && !this.state.showSignup &&
-                    
-                    <div className="stats">
+
+                    <div>
+                        <Stats logged={this.props.logged} playerName={this.props.playerName} />
                         <p onClick={() => this.logOut()} className="logout-btn link">Log out ?</p>
                     </div>
                 }

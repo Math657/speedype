@@ -70,13 +70,12 @@ export class Game extends Component {
     }
 
     checkEqual(arr1, arr2) {
-        if(arr1.length !== arr2.length)
+        if (arr1.length !== arr2.length)
             return false
-        for(var i = arr1.length; i--;) {
-            if(arr1[i] !== arr2[i])
+        for (var i = arr1.length; i--;) {
+            if (arr1[i] !== arr2[i])
                 return false
         }
-  
         return true
     }
     
@@ -89,7 +88,7 @@ export class Game extends Component {
         this.setState({
           timer: newTime
         })
-        if(newTime === 0){
+        if (newTime === 0){
             window.clearInterval(this.interval)
 
             if (this.props.logged) {
@@ -115,24 +114,6 @@ export class Game extends Component {
         }
     }
       
-    // rating() {
-    //     if (this.state.score < 15) {
-    //       return '😫'
-    //     }
-    //     else if (this.state.score < 25) {
-    //       return '😐'
-    //     }
-    //     else if (this.state.score < 35) {
-    //       return '😊'
-    //     }
-    //     else if (this.state.score < 45) {
-    //       return '😃'
-    //     }
-    //     else {
-    //       return '😎'
-    //     }
-    // }
-      
     startGame() {
         axios.get(`${process.env.REACT_APP_API_URL}/generate/words`)
         .then(res => {
@@ -146,7 +127,7 @@ export class Game extends Component {
                     activeWord: this.getWord(),
                     gameStarted: true,
                     score: 0,
-                    timer: 6
+                    timer: 60
                 })      
             })
         })
@@ -199,10 +180,10 @@ export class Game extends Component {
           board=(
              <div className="game__board" key="start">
               <p className="home-title">{'Welcome to Speedype.'}</p>
-              <p className="home-infos">{'Type as many words as you can'}</p>
+              <p className="home-infos">{'Type as many words as you can in 60 seconds.'}</p>
               <button className="button" onClick={this.startGame}>Play</button>
               {this.props.logged === true &&
-                <Link to="/stats"><p className="logged-as">Logged as {this.props.playerName}</p></Link>
+                <Link to="/login"><p className="logged-as">Logged as {this.props.playerName}</p></Link>
               }
              </div>)
         }
@@ -230,7 +211,7 @@ export class Game extends Component {
                 }  
                 <button className="button" onClick={this.startGame}>{'Retry'}</button>
                 {this.props.logged === true &&
-                    <Link to="/stats"><p className="logged-as">Logged as {this.props.playerName}</p></Link>
+                    <Link to="/login"><p className="logged-as">Logged as {this.props.playerName}</p></Link>
                 }
               </div>
             </div>

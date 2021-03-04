@@ -1,0 +1,86 @@
+# image: docker:git
+# services:
+#   - docker:dind
+
+# stages:
+#   - build
+#   - release
+#   - deploy
+
+# variables:
+#   CONTAINER_TEST_IMAGE_FRONTEND: registry.gitlab.com/rexar/fish-follow/frontend:$CI_BUILD_REF_NAME
+#   CONTAINER_RELEASE_IMAGE_FRONTEND: registry.gitlab.com/rexar/fish-follow/frontend:latest
+#   CONTAINER_TEST_IMAGE_BACKEND: registry.gitlab.com/rexar/fish-follow/backend:$CI_BUILD_REF_NAME
+#   CONTAINER_RELEASE_IMAGE_BACKEND: registry.gitlab.com/rexar/fish-follow/backend:latest
+
+# before_script:
+#   - echo "$CI_REGISTRY_PASSWORD" | docker login -u "$CI_REGISTRY_USER" "$CI_REGISTRY" --password-stdin
+
+# build:
+#   stage: build
+#   script:
+#     - cd ./frontend
+#     - docker build -t $CONTAINER_TEST_IMAGE_FRONTEND .
+#     - docker push $CONTAINER_TEST_IMAGE_FRONTEND
+#     - cd ..
+#     - cd ./backend
+#     - docker build --build-arg DB=$CI_DB --build-arg TOKEN=$CI_SECRET_KEY_TOKEN -t $CONTAINER_TEST_IMAGE_BACKEND .
+#     - docker push $CONTAINER_TEST_IMAGE_BACKEND
+
+# release-image:
+#   stage: release
+#   script:
+#     - docker pull $CONTAINER_TEST_IMAGE_FRONTEND
+#     - docker tag $CONTAINER_TEST_IMAGE_FRONTEND $CONTAINER_RELEASE_IMAGE_FRONTEND
+#     - docker push $CONTAINER_RELEASE_IMAGE_FRONTEND
+#     - docker pull $CONTAINER_TEST_IMAGE_BACKEND
+#     - docker tag $CONTAINER_TEST_IMAGE_BACKEND $CONTAINER_RELEASE_IMAGE_BACKEND
+#     - docker push $CONTAINER_RELEASE_IMAGE_BACKEND
+#   only:
+#     - master
+
+# deploy:
+#   stage: deploy
+#   before_script:
+#     - which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )
+#     - eval $(ssh-agent -s)
+#     - echo "$CI_SSHKEY" | tr -d '\r' | ssh-add - > /dev/null
+#     - mkdir -p ~/.ssh
+#     - chmod 700 ~/.ssh
+#     - echo "$CI_KNOWN_HOSTS" > ~/.ssh/known_hosts
+#     - chmod 644 ~/.ssh/known_hosts
+    
+#   script:
+#     - ssh -tt root@37.187.127.217 << EOF
+
+#       echo '$CI_REGISTRY_PASSWORD' | docker login -u '$CI_REGISTRY_USER' '$CI_REGISTRY' --password-stdin
+
+#       docker pull registry.gitlab.com/rexar/fish-follow/backend:latest
+
+#       docker pull registry.gitlab.com/rexar/fish-follow/frontend:latest
+
+#       docker stop fishFollowFrontend
+
+#       docker stop fishFollowBackend
+
+#       docker rm fishFollowFrontend
+
+#       docker rm fishFollowBackend
+
+#       docker rmi registry.gitlab.com/rexar/fish-follow/frontend:current
+
+#       docker rmi registry.gitlab.com/rexar/fish-follow/backend:current
+
+#       docker tag registry.gitlab.com/rexar/fish-follow/frontend:latest registry.gitlab.com/rexar/fish-follow/frontend:current
+
+#       docker tag registry.gitlab.com/rexar/fish-follow/backend:latest registry.gitlab.com/rexar/fish-follow/backend:current
+
+#       docker run -d -p 29170:80 -l traefik.enable=true -l traefik.backend=frontendff -l traefik.frontend.rule=Host:fishnfollow.com -l traefik.docker.network=proxy -l traefik.port=80 --network proxy --restart unless-stopped --name fishFollowFrontend registry.gitlab.com/rexar/fish-follow/frontend:current
+
+#       docker run -d -p 29171:3000 -l traefik.enable=true -l traefik.backend=backendff -l traefik.frontend.rule=Host:backend.fishnfollow.com -l traefik.docker.network=proxy -l traefik.port=3000 --network proxy --restart unless-stopped --name fishFollowBackend registry.gitlab.com/rexar/fish-follow/backend:current
+
+#       exit
+
+#       EOF
+#   only:
+#     - master

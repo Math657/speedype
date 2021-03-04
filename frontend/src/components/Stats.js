@@ -1,6 +1,5 @@
 import axios from 'axios';
 import React, { Component } from 'react'
-import { Link } from 'react-router-dom'
 import Moment from 'react-moment'
 
 
@@ -45,11 +44,6 @@ export class Stats extends Component {
                         }      
                     </div>   
                 }
-               {this.props.logged === false &&
-                   <div className="stats-notLogged">
-                       <Link to="/login"><p>Log in to track and get your stats!</p></Link>
-                   </div>
-               }
             </div>
         )
     }
