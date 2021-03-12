@@ -1,1 +1,1 @@
-Typing speed app build with react.
+Typing speed app build with React and Symfony.
